@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Security.Principal;
 using System.Text;
 
 public class Program
@@ -20,16 +22,16 @@ public class Program
         const string InsertNamePrompt = "Enter your wizard's name: ";
         const string TrainingMsg = "Day {0} -> {1} has trained for a total of {2} hours and gained {3} power points.";
         const string TrainingCompleteMsg = "Training complete! {0} has achieved a total power of {1} points and earned the title '{2}'."; 
-        const string MsgE = "Repeteixes a 2a convocatòria.";
-        const string MsgD = "Encara confons la vareta amb una cullera.";
-        const string MsgC = "Ets un Invocador de Brises Màgiques.";
-        const string MsgB = "Uau! Pots invocar dracs sense cremar el laboratori!";
-        const string MsgA = "Has assolit el rang de Mestre dels Arcans!";
-        const string RankE = "Raoden el Elantrí";
-        const string RankD = "Zyn el Buguejat";
+        const string MsgE = "You repeat on the second call.";
+        const string MsgD = "You still confuse the rod with a spoon.";
+        const string MsgC = "You are a Summoner of Magical Breezes.";
+        const string MsgB = "Wow! You can summon dragons without burning down the lab!";
+        const string MsgA = "You have reached the rank of Arcane Master!";
+        const string RankE = "Raoden the Elantrian";
+        const string RankD = "Zyn the Bugged";
         const string RankC = "Arka Nullpointer";
-        const string RankB = "Elarion de les Brases";
-        const string RankA = "ITB-Wizard el Gris";
+        const string RankB = "Elarion of the Embers";
+        const string RankA = "ITB-Wizard the Gray";
         const int TotalDaysTraining = 5;
         const int MaxHoursPerDay = 25;
         const int MaxPowerPerDay = 11;
@@ -58,16 +60,37 @@ public class Program
         const string noHp = "You have slained the monster!";
         const string lvlUp = "Congratulations! You levelep up! Now your lvl is: {0}";
         const string lvlFinal = "You have reached the final level.";
+        const string ThrowDice = "Enter to throw the dice";
 
-
-        int rndPositionArray;
-        int rndDice;
-        int monsterHp; 
+        int rndPositionArray, rndDice, monsterHp;
         int levelMage = 0;
         int[] monsterHpArray = {3, 5, 10, 11, 18, 15, 20, 50};
         string[] monsterArray = {monsterSkeleton, monsterGoblin, monsterSlime, monsterWolf, 
             monsterSpider, monsterGolem, monsterNecromancer, monsterDragon};
         string[] diceArray = {dice1, dice2, dice3, dice4, dice5, dice6};
+
+        //Loot the mine
+        const string WelcomeMine = "Welcome to the mine!";
+        const string ChooseRow = "Choose the number of the Row: ";
+        const string ChooseCol = "Choose the number of the Colunm: ";
+        const string CoinFinded = "You have founded a coin!";
+        const string NothingFound = "Nothing Found";
+        const string FailedAttempt = "You have not entered the values correctly. You have lost 1 attempt";
+        const string AttemptsLeft = "{0} attempts left";
+        const string BitsWon = "You won {0} bits! Your total bits updated to {1}. \n";
+        const string BitsTotal = "Your total bits are {0}";
+        const string RepeatValuesFailed = "You have already found that box.";
+        const int maxTries = 5;
+        const int minBits = 5;
+        const int maxBits = 50;
+
+        string[,] mineMatrix = new string[5, 5];
+        string[,] mineMatrixUpdated = new string[5, 5];
+        
+        string rndSquare;
+
+        int rndSquareNumber, numberInputRow, numberInputCol, userTries, rndBits, totalBits = 0;
+
 
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
@@ -86,11 +109,6 @@ public class Program
             {
                 op = Convert.ToInt32(Console.ReadLine());
 
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine(InputErrorMessage);
-                op = -1;
             }
             catch (Exception)
             {
@@ -159,7 +177,8 @@ public class Program
                         do
                         {
                             rndDice = rnd.Next(0, 6);
-
+                            Console.Write(ThrowDice);
+                            Console.ReadLine();
                             Console.WriteLine(diceArray[rndDice]);
 
                             monsterHp -= (rndDice + 1);
@@ -185,7 +204,119 @@ public class Program
 
                     break;
                 case 3: //Loot the mine
+
+                    userTries = 0;
+
+                    Console.WriteLine(WelcomeMine);
+
+                    for (int i = 0; i < mineMatrix.GetLength(0); i++) //Add holes value to the matrix
+                    {
+                        for (int j = 0; j < mineMatrix.GetLength(1); j++)
+                        {
+                            mineMatrix[i,j] = $"🕳 ";
+                        }
+                    }
                     
+                    for (int i = 0; i < mineMatrix.GetLength(0); i++) //Print the matrix
+                    {
+                        for (int j = 0; j < mineMatrix.GetLength(1); j++)
+                        {
+                            Console.Write($"{mineMatrix[i,j]} ");
+                        }
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine();
+
+                    for (int i = 0; i < mineMatrixUpdated.GetLength(0); i++) //Add random coins to another matrix
+                    {
+                        for (int j = 0; j < mineMatrixUpdated.GetLength(1); j++)
+                        {
+                            rndSquareNumber = rnd.Next(0, 3);
+
+                            if (rndSquareNumber == 0)
+                            {
+                                rndSquare = "🪙";
+                            }
+                            else
+                            {
+                                rndSquare = "";
+                            }
+                            mineMatrixUpdated[i, j] = rndSquare;
+                        }
+                    }
+
+                    do
+                    {
+                        Console.WriteLine(AttemptsLeft, (maxTries - userTries));
+                        Console.WriteLine();
+                        Console.Write(ChooseRow);
+                        try
+                        {
+                            numberInputRow = Convert.ToInt32(Console.ReadLine());
+                        }
+                        catch (Exception)
+                        {
+                            numberInputRow = -1;
+                        }
+
+                        Console.Write(ChooseCol);
+                        try
+                        {
+                            numberInputCol = Convert.ToInt32(Console.ReadLine());
+                        }
+                        catch (Exception)
+                        {
+                            numberInputCol = -1;
+                        }
+                        Console.WriteLine();
+
+                        if (numberInputRow > 0 && numberInputRow <= mineMatrixUpdated.GetLength(0) && numberInputCol > 0 && numberInputCol <= mineMatrixUpdated.GetLength(1))
+                        {
+                            if(mineMatrix[numberInputRow - 1, numberInputCol - 1] == "🪙" || mineMatrix[numberInputRow - 1, numberInputCol - 1] == "❌")
+                            {
+                                Console.WriteLine(RepeatValuesFailed);
+                            }
+                            else
+                            {
+                                if (mineMatrixUpdated[numberInputRow - 1, numberInputCol - 1] == "🪙") //Compare the user input with the coin matrix.
+                                {
+                                    Console.WriteLine(CoinFinded);
+                                    mineMatrix[numberInputRow - 1, numberInputCol - 1] = "🪙"; //if true, then the first matrix change its value
+
+                                    rndBits = rnd.Next(minBits, maxBits + 1);
+                                    totalBits += rndBits;
+
+                                    Console.WriteLine(BitsWon, rndBits, totalBits);
+                                    userTries++;
+                                }
+                                else
+                                {
+                                    Console.WriteLine(NothingFound);
+                                    mineMatrix[numberInputRow - 1, numberInputCol - 1] = "❌"; //if false, its value change too to a X
+                                    userTries++;
+                                }
+                            } 
+                        }
+                        else
+                        {
+                            Console.WriteLine(FailedAttempt);
+                            userTries++;
+                        }
+
+                        for (int i = 0; i < mineMatrix.GetLength(0); i++) //Print the first matrix with new values.
+                        {
+                            for (int j = 0; j < mineMatrix.GetLength(1); j++)
+                            {
+                                Console.Write($"{mineMatrix[i, j]} ");
+                            }
+                            Console.WriteLine();
+                        }
+                        Console.WriteLine();
+
+                    } while (userTries < maxTries);
+
+                    Console.WriteLine(BitsTotal, totalBits);
+
                     break;
                 case 0:
                     Console.WriteLine(ExitMessage);
