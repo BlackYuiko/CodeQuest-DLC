@@ -15,14 +15,15 @@ public class Program
         const string MenuOption2 = "2. Increase your level";
         const string MenuOption3 = "3. Loot the mine";
         const string MenuOption4 = "4. Show the inventory";
+        const string MenuOption5 = "5. Buy Items";
         const string MenuOptionExit = "0. Exit game";
-        const string MenuPrompt = "Choose an option (1-4) - (0) to exit: ";
+        const string MenuPrompt = "Choose an option (1-5) - (0) to exit: ";
         const string InputErrorMessage = "Invalid input. Please enter a number between 0 and 3.";
-        
+
         //trainwizard
         const string InsertNamePrompt = "Enter your wizard's name: ";
         const string TrainingMsg = "Day {0} -> {1} has trained for a total of {2} hours and gained {3} power points.";
-        const string TrainingCompleteMsg = "Training complete! {0} has achieved a total power of {1} points and earned the title '{2}'."; 
+        const string TrainingCompleteMsg = "Training complete! {0} has achieved a total power of {1} points and earned the title '{2}'.";
         const string MsgE = "You repeat on the second call.";
         const string MsgD = "You still confuse the rod with a spoon.";
         const string MsgC = "You are a Summoner of Magical Breezes.";
@@ -45,9 +46,9 @@ public class Program
         Random rnd = new Random();
 
         //Increase LVL
-        const string monsterSkeleton = "Wandering Skeleton", monsterGoblin = "Forest Goblin", 
-            monsterSlime = "Green Slime", monsterWolf = "Ember Wolf", 
-            monsterSpider = "Giant Spider", monsterGolem = "Iron Golem", 
+        const string monsterSkeleton = "Wandering Skeleton", monsterGoblin = "Forest Goblin",
+            monsterSlime = "Green Slime", monsterWolf = "Ember Wolf",
+            monsterSpider = "Giant Spider", monsterGolem = "Iron Golem",
             monsterNecromancer = "Lost Necromancer", monsterDragon = "Ancient Dragon";
         const string dice1 = "   ________\r\n  /       /|   \r\n /_______/ |\r\n |       | |\r\n |   o   | /\r\n |       |/ \r\n '-------'\r\n";
         const string dice2 = "   ________\r\n  /       /|   \r\n /_______/ |\r\n | o     | |\r\n |       | /\r\n |     o |/ \r\n '-------'\r\n";
@@ -66,7 +67,7 @@ public class Program
         int rndPositionArray, rndDice, monsterHp;
         int levelMage = 0;
         int[] monsterHpArray = {3, 5, 10, 11, 18, 15, 20, 50};
-        string[] monsterArray = {monsterSkeleton, monsterGoblin, monsterSlime, monsterWolf, 
+        string[] monsterArray = {monsterSkeleton, monsterGoblin, monsterSlime, monsterWolf,
             monsterSpider, monsterGolem, monsterNecromancer, monsterDragon};
         string[] diceArray = {dice1, dice2, dice3, dice4, dice5, dice6};
 
@@ -87,7 +88,7 @@ public class Program
 
         string[,] mineMatrix = new string[5, 5];
         string[,] mineMatrixUpdated = new string[5, 5];
-        
+
         string rndSquare;
 
         int rndSquareNumber, numberInputRow, numberInputCol, userTries, rndBits, totalBits = 0;
@@ -95,8 +96,26 @@ public class Program
         //Show Inventory
         const string ItemsInventory = "You have this items in your inventory: \n";
         const string NoItemsInventory= "Oh, you have no items yet.";
-        
+
         string[] inventoryArray = new string[0];
+
+        //Buy items
+        const string WelcomeShop = "Welcome to the shop!\n";
+        const string OutputNumberItem = "\nWrite the number (1-5) to buy or (0) to leave the shop: ";
+        const string ErrorNumberInput = "Error! You must introduce a number in the list.";
+        const string ItemPurchased = "Your item has been purchased correctly.";
+        const string ItemPurchasedBefore = "This item was previosly purchased.";
+        const string NotEnoughtBits = "You have not enought bits";
+        const string UpdatedBits = "Your total bits updated to {0}.";
+
+        string[] inventoryNewArray;
+        string[] itemsDescriptionArray = { "Number", "Objecte", "Preu (bits)" };
+        int[] itemsNumberArray = { 1, 2, 3, 4, 5 };
+        string[] itemsNameArray = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️" };
+        int[] itemsPriceArray = { 30, 10, 50, 40, 20 };
+
+        int numberItemInput;
+        bool validNumber, purchased;
 
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
@@ -109,6 +128,7 @@ public class Program
             Console.WriteLine(MenuOption2);
             Console.WriteLine(MenuOption3);
             Console.WriteLine(MenuOption4);
+            Console.WriteLine(MenuOption5);
             Console.WriteLine(MenuOptionExit);
             Console.Write(MenuPrompt);
 
@@ -172,7 +192,7 @@ public class Program
 
                     rndPositionArray = rnd.Next(0, 8);
                     monsterHp = monsterHpArray[rndPositionArray];
-                    
+
                     if (levelMage == 5)
                     {
                         Console.WriteLine(lvlFinal);
@@ -193,7 +213,7 @@ public class Program
 
                             if (monsterHp > 0)
                             {
-                                Console.WriteLine(HpDecreased, monsterHp); 
+                                Console.WriteLine(HpDecreased, monsterHp);
                             }
                             else
                             {
@@ -223,7 +243,7 @@ public class Program
                             mineMatrix[i,j] = $"🕳 ";
                         }
                     }
-                    
+
                     for (int i = 0; i < mineMatrix.GetLength(0); i++) //Print the matrix
                     {
                         for (int j = 0; j < mineMatrix.GetLength(1); j++)
@@ -279,7 +299,7 @@ public class Program
 
                         if (numberInputRow > 0 && numberInputRow <= mineMatrixUpdated.GetLength(0) && numberInputCol > 0 && numberInputCol <= mineMatrixUpdated.GetLength(1))
                         {
-                            if(mineMatrix[numberInputRow - 1, numberInputCol - 1] == "🪙" || mineMatrix[numberInputRow - 1, numberInputCol - 1] == "❌")
+                            if (mineMatrix[numberInputRow - 1, numberInputCol - 1] == "🪙" || mineMatrix[numberInputRow - 1, numberInputCol - 1] == "❌")
                             {
                                 Console.WriteLine(RepeatValuesFailed);
                             }
@@ -302,7 +322,7 @@ public class Program
                                     mineMatrix[numberInputRow - 1, numberInputCol - 1] = "❌"; //if false, its value change too to a X
                                     userTries++;
                                 }
-                            } 
+                            }
                         }
                         else
                         {
@@ -326,7 +346,7 @@ public class Program
 
                     break;
                 case 4: //Show Inventory
-                    
+
                     if (inventoryArray.Length == 0)
                     {
                         Console.WriteLine(NoItemsInventory);
@@ -341,11 +361,86 @@ public class Program
                     }
 
                     break;
+                case 5: //Buy Items
+
+                    inventoryNewArray = new string[inventoryArray.Length + 1];
+
+                    Console.WriteLine(WelcomeShop);
+
+                    for (int i = 0; i < itemsDescriptionArray.Length; i++)
+                    {
+                        Console.Write($"| {itemsDescriptionArray[i]} |");
+                    }
+                    Console.WriteLine();
+                    for (int i = 0; i < itemsNameArray.Length; i++)
+                    {
+                        Console.WriteLine($"| {itemsNumberArray[i]}. | {itemsNameArray[i]} | {itemsPriceArray[i]} |");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine(BitsTotal, totalBits);
+
+                    validNumber = false;
+
+                    while (!validNumber)
+                    {
+                        Console.Write(OutputNumberItem);
+                        string? entrada = Console.ReadLine();
+
+                        if (int.TryParse(entrada, out numberItemInput))
+                        {
+                            if (numberItemInput >= 1 && numberItemInput <= 5)
+                            {
+                                if (itemsPriceArray[numberItemInput - 1] > totalBits)
+                                {
+                                    Console.WriteLine(NotEnoughtBits);
+                                }
+                                else
+                                {
+                                    purchased = false;
+                                    for (int i = 0; i < inventoryArray.Length; i++)
+                                    {
+                                        if (inventoryArray[i] == itemsNameArray[numberItemInput - 1]) //Compare if the item was purchased before. So if true, then the item can't be purchased again.
+                                        {
+                                            Console.WriteLine(ItemPurchasedBefore);
+                                            purchased = true;
+                                        }
+                                    }
+                                    if (!purchased)
+                                    {
+                                        for (int i = 0; i < inventoryArray.Length; i++)
+                                        {
+                                            inventoryNewArray[i] = inventoryArray[i];
+                                        }
+                                        inventoryNewArray[inventoryNewArray.Length - 1] = itemsNameArray[numberItemInput - 1];
+                                        inventoryArray = inventoryNewArray; //Copy the new Array to the Inventory Array
+
+                                        totalBits -= itemsPriceArray[numberItemInput - 1]; //Updated the new value of bits
+                                        Console.WriteLine(ItemPurchased);
+                                        Console.WriteLine(UpdatedBits, totalBits);
+                                    }
+                                }
+                                validNumber = true;
+                            }
+                            else if (numberItemInput == 0)
+                            {
+                                validNumber = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine(ErrorNumberInput);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(ErrorNumberInput);
+                        }
+                    }
+                    break;
                 case 0:
                     Console.WriteLine(ExitMessage);
                     break;
             }
-        Console.WriteLine();
+            Console.WriteLine();
         } while (op != 0);
     }
 }
