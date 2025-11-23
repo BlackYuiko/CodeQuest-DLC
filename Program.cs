@@ -14,8 +14,9 @@ public class Program
         const string MenuOption1 = "1. Train your wizard";
         const string MenuOption2 = "2. Increase your level";
         const string MenuOption3 = "3. Loot the mine";
+        const string MenuOption4 = "4. Show the inventory";
         const string MenuOptionExit = "0. Exit game";
-        const string MenuPrompt = "Choose an option (1-3) - (0) to exit: ";
+        const string MenuPrompt = "Choose an option (1-4) - (0) to exit: ";
         const string InputErrorMessage = "Invalid input. Please enter a number between 0 and 3.";
         
         //trainwizard
@@ -91,6 +92,11 @@ public class Program
 
         int rndSquareNumber, numberInputRow, numberInputCol, userTries, rndBits, totalBits = 0;
 
+        //Show Inventory
+        const string ItemsInventory = "You have this items in your inventory: \n";
+        const string NoItemsInventory= "Oh, you have no items yet.";
+        
+        string[] inventoryArray = new string[0];
 
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
@@ -102,6 +108,7 @@ public class Program
             Console.WriteLine(MenuOption1);
             Console.WriteLine(MenuOption2);
             Console.WriteLine(MenuOption3);
+            Console.WriteLine(MenuOption4);
             Console.WriteLine(MenuOptionExit);
             Console.Write(MenuPrompt);
 
@@ -318,15 +325,27 @@ public class Program
                     Console.WriteLine(BitsTotal, totalBits);
 
                     break;
+                case 4: //Show Inventory
+                    
+                    if (inventoryArray.Length == 0)
+                    {
+                        Console.WriteLine(NoItemsInventory);
+                    }
+                    else
+                    {
+                        Console.WriteLine(ItemsInventory);
+                        for (int i = 0; i < inventoryArray.Length; i++)
+                        {
+                            Console.WriteLine(inventoryArray[i]);
+                        }
+                    }
+
+                    break;
                 case 0:
                     Console.WriteLine(ExitMessage);
-                    break;
-                default:
-                    Console.WriteLine(InputErrorMessage);
                     break;
             }
         Console.WriteLine();
         } while (op != 0);
     }
-
 }
