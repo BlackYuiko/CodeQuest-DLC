@@ -12,14 +12,16 @@ public class Program
 
         //menu
         const string MenuTitle = "===== MAIN MENU - CODEQUEST =====";
+        const string WelcomeUser = "===== Welcome, {0} the {1} with level {2} =====";
         const string MenuOption1 = "1. Train your wizard";
         const string MenuOption2 = "2. Increase your level";
         const string MenuOption3 = "3. Loot the mine";
         const string MenuOption4 = "4. Show the inventory";
         const string MenuOption5 = "5. Buy Items";
         const string MenuOption6 = "6. Show attacks by LVL";
+        const string MenuOption7 = "7. Decode ancient Scroll";
         const string MenuOptionExit = "0. Exit game";
-        const string MenuPrompt = "Choose an option (1-6) - (0) to exit: ";
+        const string MenuPrompt = "Choose an option (1-7) - (0) to exit: ";
         const string InputErrorMessage = "Invalid input. Please enter a number between 0 and 3.";
 
         //trainwizard
@@ -43,8 +45,9 @@ public class Program
         const int MinPowerPerDay = 1;
 
         int op, totalPower = 0, totalHours = 0; ;
-        string? wizardName, wizardTitle;
+        string? wizardName = "", wizardTitle = "";
         string finalMessage;
+        bool nameDeserverd = false;
         Random rnd = new Random();
 
         //Increase LVL
@@ -77,7 +80,7 @@ public class Program
         const string WelcomeMine = "Welcome to the mine!";
         const string ChooseRow = "Choose the number of the Row: ";
         const string ChooseCol = "Choose the number of the Colunm: ";
-        const string CoinFinded = "You have founded a coin!";
+        const string CoinFound = "You have found a coin!";
         const string NothingFound = "Nothing Found";
         const string FailedAttempt = "You have not entered the values correctly. You have lost 1 attempt";
         const string AttemptsLeft = "{0} attempts left";
@@ -132,6 +135,27 @@ public class Program
         new string[] { "Cataclysm 🌋", "Portal of Chaos 🌀", "Arcane Blood Pact 🩸", "Elemental Storm ⛈️" }
         };
 
+        //Decode ancient Scroll
+        const string WelcomeDecode = "Welcome to the Decode ancient Scroll!\n";
+        const string ScrollsToDecode = "Scrolls to decode:";
+        const string ScrollOne = "The 🐲 sleeps in the mountain of fire 🔥";
+        const string ScrollTwo = "Ancient magic flows through the crystal caves";
+        const string ScrollThree = "Spell: Ignis 5 🔥, Aqua 6 💧, Terra 3 🌍, Ventus 8 🌪️";
+        const string ChooseScroll = "\nChoose a decoding operation: ";
+        const string DecodeOne = "1. Decipher spell (remove spaces)";
+        const string DecodeTwo = "2. Count magical runes (vowels)";
+        const string DecodeThree = "3. Extract secret code (numbers)";
+        const string DecipheredSpell = "Deciphered Spell: {0}";
+        const string VowelsFound = "{0} magical runes (vowels) found.";
+        const string NumsFound = "Decoded number: {0}";
+        const string DecodedAllParts = "Congratulations! You have successfully decoded all parts of the scroll.";
+        const string PossibleVowels = "aàáeèéiíïoòóuúüAÀÁEÈÉIÍÏOÒÓUÚÜ";
+        const string PossibleNums = "0123456789";
+
+        string noSpaces = "", onlyNumbers = "";
+        int vowelCount = 0, numberListInput;
+        bool isValid, scrollOneDone = false, scrollTwoDone = false, scrollThreeDone = false ;
+
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
 
@@ -139,12 +163,17 @@ public class Program
         do
         {
             Console.WriteLine(MenuTitle);
+            if (nameDeserverd)
+            {
+                Console.WriteLine(WelcomeUser, wizardName, wizardTitle, levelMage);
+            }
             Console.WriteLine(MenuOption1);
             Console.WriteLine(MenuOption2);
             Console.WriteLine(MenuOption3);
             Console.WriteLine(MenuOption4);
             Console.WriteLine(MenuOption5);
-            Console.WriteLine(MenuOption6); 
+            Console.WriteLine(MenuOption6);
+            Console.WriteLine(MenuOption7);
             Console.WriteLine(MenuOptionExit);
             Console.Write(MenuPrompt);
 
@@ -202,6 +231,7 @@ public class Program
                     Console.WriteLine(finalMessage);
                     Console.WriteLine(TrainingCompleteMsg, wizardName, totalPower, wizardTitle);
 
+                    nameDeserverd = true;
                     break;
 
                 case 2: //Increase your level
@@ -323,7 +353,7 @@ public class Program
                             {
                                 if (mineMatrixUpdated[numberInputRow - 1, numberInputCol - 1] == "🪙") //Compare the user input with the coin matrix.
                                 {
-                                    Console.WriteLine(CoinFinded);
+                                    Console.WriteLine(CoinFound);
                                     mineMatrix[numberInputRow - 1, numberInputCol - 1] = "🪙"; //if true, then the first matrix change its value
 
                                     rndBits = rnd.Next(minBits, maxBits + 1);
@@ -400,9 +430,9 @@ public class Program
                     while (!validNumber)
                     {
                         Console.Write(OutputNumberItem);
-                        string? entrada = Console.ReadLine();
+                        string? inputUser = Console.ReadLine();
 
-                        if (int.TryParse(entrada, out numberItemInput))
+                        if (int.TryParse(inputUser, out numberItemInput))
                         {
                             if (numberItemInput >= 1 && numberItemInput <= 5)
                             {
@@ -440,7 +470,7 @@ public class Program
                         }
                     }
                     break;
-                case 6:
+                case 6: //Show Attacks
                     if (levelMage == 0)
                     {
                         Console.WriteLine(NoLvl);
@@ -459,6 +489,88 @@ public class Program
                         else
                         {
                             Console.WriteLine(FinalAttacks);
+                        }
+                    }
+                    break;
+                case 7: //Decode ancient Scroll
+                    Console.WriteLine(WelcomeDecode);
+                    Console.WriteLine(ScrollsToDecode);
+                    Console.WriteLine($"1. {ScrollOne}");
+                    Console.WriteLine($"2. {ScrollTwo}");
+                    Console.WriteLine($"3. {ScrollThree} \n");
+                    Console.WriteLine(DecodeOne);
+                    Console.WriteLine(DecodeTwo);
+                    Console.WriteLine(DecodeThree);
+
+                    isValid = false;
+                    while (!isValid)
+                    {
+                        Console.Write(ChooseScroll);
+                        string? input = Console.ReadLine();
+
+                        if (int.TryParse(input, out numberListInput))
+                        {
+                            if (numberListInput >= 1 && numberListInput <= 3)
+                            {
+                                switch (numberListInput)
+                                {
+                                    case 1:
+                                        if (!scrollOneDone)
+                                        {
+                                            for (int i = 0; i < ScrollOne.Length; i++) // It can be done too with: noSpaces = ScrollOne.Replace(" ", "");
+                                            {
+                                                if (ScrollOne[i] != ' ')
+                                                {
+                                                    noSpaces += ScrollOne[i];
+                                                }
+                                            }
+                                            Console.WriteLine("\n" + DecipheredSpell, noSpaces);
+                                            scrollOneDone = true;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (!scrollTwoDone)
+                                        {
+                                            for (int i = 0; i < ScrollTwo.Length; i++)
+                                            {
+                                                if (PossibleVowels.Contains(ScrollTwo[i]))
+                                                {
+                                                    vowelCount++;
+                                                }
+                                            }
+                                            Console.WriteLine("\n" + VowelsFound, vowelCount);
+                                            scrollTwoDone = true;
+                                        }
+                                        break;
+                                    case 3:
+                                        if (!scrollThreeDone)
+                                        {
+                                            for (int i = 0; i < ScrollThree.Length; i++)
+                                            {
+                                                if (PossibleNums.Contains(ScrollThree[i]))
+                                                {
+                                                    onlyNumbers += ScrollThree[i];
+                                                }
+                                            }
+                                            Console.WriteLine("\n" + NumsFound, onlyNumbers);
+                                            scrollThreeDone = true;
+                                        }
+                                        break;
+                                }
+                                isValid = true;
+                                if (scrollOneDone && scrollTwoDone && scrollThreeDone) //Verify all scrolls are done.
+                                {
+                                    Console.WriteLine("\n" + DecodedAllParts);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ErrorNumberInput);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(ErrorNumberInput);
                         }
                     }
                     break;
