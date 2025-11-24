@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Reflection.Emit;
 using System.Security.Principal;
 using System.Text;
 
@@ -16,8 +17,9 @@ public class Program
         const string MenuOption3 = "3. Loot the mine";
         const string MenuOption4 = "4. Show the inventory";
         const string MenuOption5 = "5. Buy Items";
+        const string MenuOption6 = "6. Show attacks by LVL";
         const string MenuOptionExit = "0. Exit game";
-        const string MenuPrompt = "Choose an option (1-5) - (0) to exit: ";
+        const string MenuPrompt = "Choose an option (1-6) - (0) to exit: ";
         const string InputErrorMessage = "Invalid input. Please enter a number between 0 and 3.";
 
         //trainwizard
@@ -59,17 +61,17 @@ public class Program
         const string MonsterRevealed = "Your oponent is {0} and has a total HP of {1}";
         const string DiceRevealed = "You rolled the dice and got a {0}.";
         const string HpDecreased = "The HP decreased to {0}";
-        const string noHp = "You have slained the monster!";
+        const string noHp = "You have slain the monster!";
         const string lvlUp = "Congratulations! You levelep up! Now your lvl is: {0}";
         const string lvlFinal = "You have reached the final level.";
         const string ThrowDice = "Enter to throw the dice";
 
         int rndPositionArray, rndDice, monsterHp;
         int levelMage = 0;
-        int[] monsterHpArray = {3, 5, 10, 11, 18, 15, 20, 50};
+        int[] monsterHpArray = { 3, 5, 10, 11, 18, 15, 20, 50 };
         string[] monsterArray = {monsterSkeleton, monsterGoblin, monsterSlime, monsterWolf,
             monsterSpider, monsterGolem, monsterNecromancer, monsterDragon};
-        string[] diceArray = {dice1, dice2, dice3, dice4, dice5, dice6};
+        string[] diceArray = { dice1, dice2, dice3, dice4, dice5, dice6 };
 
         //Loot the mine
         const string WelcomeMine = "Welcome to the mine!";
@@ -95,7 +97,7 @@ public class Program
 
         //Show Inventory
         const string ItemsInventory = "You have this items in your inventory: \n";
-        const string NoItemsInventory= "Oh, you have no items yet.";
+        const string NoItemsInventory = "Oh, you have no items yet.";
 
         string[] inventoryArray = new string[0];
 
@@ -116,6 +118,20 @@ public class Program
         int numberItemInput;
         bool validNumber;
 
+        //Show attacks by LVL
+        const string NoLvl = "Your actual lvl is 0. That means you have no attacks yet.";
+        const string Attacks = "You have this attacks:\n";
+        const string KeepTraining = "\nKeep training to unlock new powers!";
+        const string FinalAttacks = "\nWow! You have reached all the attacks!";
+
+        string[][] attacksJagged = {
+        new string[] { "Magic Spark 💫", },
+        new string[] { "Fireball 🔥", "Ice Ray 🥏", "Arcane Shield ⚕️" },
+        new string[] { "Meteor ☄️", "Pure Energy Explosion 💥", "Minor Charm 🎭", "Air Strike 🍃" },
+        new string[] { "Wave of Light ⚜️", "Storm of Wings 🐦" },
+        new string[] { "Cataclysm 🌋", "Portal of Chaos 🌀", "Arcane Blood Pact 🩸", "Elemental Storm ⛈️" }
+        };
+
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
 
@@ -128,6 +144,7 @@ public class Program
             Console.WriteLine(MenuOption3);
             Console.WriteLine(MenuOption4);
             Console.WriteLine(MenuOption5);
+            Console.WriteLine(MenuOption6); 
             Console.WriteLine(MenuOptionExit);
             Console.Write(MenuPrompt);
 
@@ -394,7 +411,7 @@ public class Program
                                     Console.WriteLine(NotEnoughtBits);
                                 }
                                 else
-                                {
+                                {                                    
                                     for (int i = 0; i < inventoryArray.Length; i++)
                                     {
                                         inventoryNewArray[i] = inventoryArray[i];
@@ -420,6 +437,28 @@ public class Program
                         else
                         {
                             Console.WriteLine(ErrorNumberInput);
+                        }
+                    }
+                    break;
+                case 6:
+                    if (levelMage == 0)
+                    {
+                        Console.WriteLine(NoLvl);
+                    } 
+                    else
+                    {
+                        Console.WriteLine(Attacks); 
+                        for (int i = 0; i < attacksJagged[levelMage - 1].Length; i++)
+                        {
+                            Console.WriteLine(attacksJagged[levelMage - 1][i]); //Print the row that matches with the level of the mage
+                        }
+                        if (levelMage != 5)
+                        {
+                            Console.WriteLine(KeepTraining);
+                        }
+                        else
+                        {
+                            Console.WriteLine(FinalAttacks);
                         }
                     }
                     break;
