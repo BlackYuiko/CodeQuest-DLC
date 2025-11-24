@@ -104,7 +104,6 @@ public class Program
         const string OutputNumberItem = "\nWrite the number (1-5) to buy or (0) to leave the shop: ";
         const string ErrorNumberInput = "Error! You must introduce a number in the list.";
         const string ItemPurchased = "Your item has been purchased correctly.";
-        const string ItemPurchasedBefore = "This item was previosly purchased.";
         const string NotEnoughtBits = "You have not enought bits";
         const string UpdatedBits = "Your total bits updated to {0}.";
 
@@ -115,7 +114,7 @@ public class Program
         int[] itemsPriceArray = { 30, 10, 50, 40, 20 };
 
         int numberItemInput;
-        bool validNumber, purchased;
+        bool validNumber;
 
         //exit
         const string ExitMessage = "Exiting game. Goodbye!";
@@ -396,28 +395,16 @@ public class Program
                                 }
                                 else
                                 {
-                                    purchased = false;
                                     for (int i = 0; i < inventoryArray.Length; i++)
                                     {
-                                        if (inventoryArray[i] == itemsNameArray[numberItemInput - 1]) //Compare if the item was purchased before. So if true, then the item can't be purchased again.
-                                        {
-                                            Console.WriteLine(ItemPurchasedBefore);
-                                            purchased = true;
-                                        }
+                                        inventoryNewArray[i] = inventoryArray[i];
                                     }
-                                    if (!purchased)
-                                    {
-                                        for (int i = 0; i < inventoryArray.Length; i++)
-                                        {
-                                            inventoryNewArray[i] = inventoryArray[i];
-                                        }
-                                        inventoryNewArray[inventoryNewArray.Length - 1] = itemsNameArray[numberItemInput - 1];
-                                        inventoryArray = inventoryNewArray; //Copy the new Array to the Inventory Array
+                                    inventoryNewArray[inventoryNewArray.Length - 1] = itemsNameArray[numberItemInput - 1];
+                                    inventoryArray = inventoryNewArray; //Copy the new Array to the Inventory Array
 
-                                        totalBits -= itemsPriceArray[numberItemInput - 1]; //Updated the new value of bits
-                                        Console.WriteLine(ItemPurchased);
-                                        Console.WriteLine(UpdatedBits, totalBits);
-                                    }
+                                    totalBits -= itemsPriceArray[numberItemInput - 1]; //Updated the new value of bits
+                                    Console.WriteLine(ItemPurchased);
+                                    Console.WriteLine(UpdatedBits, totalBits);
                                 }
                                 validNumber = true;
                             }
